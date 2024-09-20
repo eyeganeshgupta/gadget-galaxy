@@ -1,16 +1,134 @@
 <!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to GadgetGalaxy</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        header {
+            background: #333;
+            color: #fff;
+            padding-top: 30px;
+            min-height: 70px;
+            border-bottom: #0779e4 3px solid;
+        }
+        header a {
+            color: #fff;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 16px;
+        }
+        header .branding {
+            float: left;
+        }
+        header .branding h1 {
+            margin: 0;
+        }
+        header nav {
+            float: right;
+            margin-top: 10px;
+        }
+        header .highlight, header .current a {
+            color: #0779e4;
+            font-weight: bold;
+        }
+        header a:hover {
+            color: #ccc;
+            font-weight: bold;
+        }
+        .showcase {
+            min-height: 400px;
+            background: url('https://placehold.co/600x400') no-repeat center center/cover;
+            text-align: center;
+            color: #fff;
+        }
+        .showcase h1 {
+            margin-top: 100px;
+            font-size: 55px;
+            margin-bottom: 10px;
+        }
+        .showcase p {
+            font-size: 20px;
+        }
+        .boxes {
+            margin-top: 20px;
+        }
+        .box {
+            float: left;
+            width: 30%;
+            padding: 10px;
+            text-align: center;
+        }
+        .box i {
+            font-size: 40px;
+            color: #0779e4;
+        }
+        footer {
+            padding: 20px;
+            margin-top: 20px;
+            color: #fff;
+            background-color: #0779e4;
+            text-align: center;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="branding">
+                <h1><span class="highlight">Gadget</span>Galaxy</h1>
+            </div>
+            <nav>
+                <a href="#" class="current">Home</a>
+                <a href="#">Products</a>
+                <a href="#">About</a>
+                <a href="#">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="showcase">
+        <div class="container">
+            <h1>Welcome to GadgetGalaxy</h1>
+            <p>Discover the latest and greatest in tech gadgets!</p>
+        </div>
+    </section>
+
+    <section class="boxes">
+        <div class="container">
+            <div class="box">
+                <i class="fas fa-mobile-alt"></i>
+                <h3>Latest Smartphones</h3>
+                <p>Explore cutting-edge mobile technology.</p>
+            </div>
+            <div class="box">
+                <i class="fas fa-laptop"></i>
+                <h3>Powerful Laptops</h3>
+                <p>Find the perfect computer for your needs.</p>
+            </div>
+            <div class="box">
+                <i class="fas fa-headphones"></i>
+                <h3>Audio Accessories</h3>
+                <p>Enhance your listening experience.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 GadgetGalaxy. All rights reserved.</p>
+    </footer>
+</body>
 </html>

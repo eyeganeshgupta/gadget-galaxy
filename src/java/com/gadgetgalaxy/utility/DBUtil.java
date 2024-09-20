@@ -1,21 +1,23 @@
 package com.gadgetgalaxy.utility;
 
-/**
- *
- * @author Ganesh
- */
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+/**
+ *
+ * @author Ganesh
+ */
 public class DBUtil {
     private static Connection conn;
+    private static final Logger LOGGER = Logger.getLogger(DBUtil.class.getName());
 
     /**
-     * 🔓 Opens a database connection
+     * Opens a database connection
      * @param dbUrl The database URL
      * @param username The database username
      * @param password The database password
@@ -24,31 +26,29 @@ public class DBUtil {
         if (conn == null) {
             try {
                 conn = DriverManager.getConnection(dbUrl, username, password);
-                System.out.println("Connection opened! 🎉");
+                LOGGER.info("Connection opened!");
             } catch (SQLException ex) {
-                System.out.println("Error in opening connection 😢");
-                ex.printStackTrace();
+                LOGGER.log(Level.SEVERE, "Error in opening connection", ex);
             }
         }
     }
 
     /**
-     * 🔒 Closes the database connection
+     * Closes the database connection
      */
     public static void closeConnection() {
         if (conn != null) {
             try {
                 conn.close();
-                System.out.println("Connection closed! 👋");
+                LOGGER.info("Connection closed!");
             } catch (SQLException ex) {
-                System.out.println("Error in closing connection 😱");
-                ex.printStackTrace();
+                LOGGER.log(Level.SEVERE, "Error in closing connection", ex);
             }
         }
     }
 
     /**
-     * 🔗 Provides the current database connection
+     * Provides the current database connection
      * @return The active Connection object
      */
     public static Connection provideConnection() {
@@ -56,33 +56,31 @@ public class DBUtil {
     }
 
     /**
-     * 📊 Closes a ResultSet object
+     * Closes a ResultSet object
      * @param rs The ResultSet to be closed
      */
     public static void closeResultSet(ResultSet rs) {
         if (rs != null) {
             try {
                 rs.close();
-                System.out.println("ResultSet closed 📊✅");
+                LOGGER.info("ResultSet closed");
             } catch (SQLException ex) {
-                System.out.println("Error in closing ResultSet 📊❌");
-                ex.printStackTrace();
+                LOGGER.log(Level.SEVERE, "Error in closing ResultSet", ex);
             }
         }
     }
 
     /**
-     * 📝 Closes a Statement object
+     * Closes a Statement object
      * @param st The Statement to be closed
      */
     public static void closeStatement(Statement st) {
         if (st != null) {
             try {
                 st.close();
-                System.out.println("Statement closed 📝✅");
+                LOGGER.info("Statement closed");
             } catch (SQLException ex) {
-                System.out.println("Error in closing Statement 📝❌");
-                ex.printStackTrace();
+                LOGGER.log(Level.SEVERE, "Error in closing Statement", ex);
             }
         }
     }
