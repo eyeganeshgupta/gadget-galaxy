@@ -13,11 +13,13 @@ import java.util.logging.Logger;
  * @author Ganesh
  */
 public class DBUtil {
+
     private static Connection conn;
     private static final Logger LOGGER = Logger.getLogger(DBUtil.class.getName());
 
     /**
      * Opens a database connection
+     *
      * @param dbUrl The database URL
      * @param username The database username
      * @param password The database password
@@ -25,10 +27,16 @@ public class DBUtil {
     public static void openConnection(String dbUrl, String username, String password) {
         if (conn == null) {
             try {
+                Class.forName("oracle.jdbc.driver.OracleDriver");
                 conn = DriverManager.getConnection(dbUrl, username, password);
                 LOGGER.info("Connection opened!");
+                System.out.println("=== Connection opened! ===");
             } catch (SQLException ex) {
                 LOGGER.log(Level.SEVERE, "Error in opening connection", ex);
+                System.out.println("=== Error in opening connection ===");
+            } catch (ClassNotFoundException cnf) {
+                System.out.println("=== ClassNotFoundException ===");
+                cnf.printStackTrace();
             }
         }
     }
@@ -49,6 +57,7 @@ public class DBUtil {
 
     /**
      * Provides the current database connection
+     *
      * @return The active Connection object
      */
     public static Connection provideConnection() {
@@ -57,6 +66,7 @@ public class DBUtil {
 
     /**
      * Closes a ResultSet object
+     *
      * @param rs The ResultSet to be closed
      */
     public static void closeResultSet(ResultSet rs) {
@@ -72,6 +82,7 @@ public class DBUtil {
 
     /**
      * Closes a Statement object
+     *
      * @param st The Statement to be closed
      */
     public static void closeStatement(Statement st) {

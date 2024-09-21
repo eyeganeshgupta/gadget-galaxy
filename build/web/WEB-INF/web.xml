@@ -6,7 +6,7 @@
                              http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
 
     <listener>
-        <listener-class>in.gadgethub.listener.DBConnectionListener</listener-class>
+        <listener-class>com.gadgetgalaxy.listener.DBConnectionListener</listener-class>
     </listener>
 
     <context-param>

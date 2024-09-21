@@ -3,8 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/D:/workspace/GadgetGalaxy/web/WEB-INF/web.xml</file>
+            <file>file:/D:/workspace/GadgetGalaxy/src/java/com/gadgetgalaxy/listener/DBConnectionListener.java</file>
+            <file>file:/D:/workspace/GadgetGalaxy/src/java/com/gadgetgalaxy/pojo/User.java</file>
             <file>file:/D:/workspace/GadgetGalaxy/src/java/com/gadgetgalaxy/utility/DBUtil.java</file>
-            <file>file:/D:/workspace/GadgetGalaxy/src/java/com/gadgetgalaxy/pojo/Users.java</file>
+            <file>file:/D:/workspace/GadgetGalaxy/src/java/com/gadgetgalaxy/dao/impl/UserDAOImpl.java</file>
+            <file>file:/D:/workspace/GadgetGalaxy/src/java/com/gadgetgalaxy/servlet/HomeServlet.java</file>
+            <file>file:/D:/workspace/GadgetGalaxy/src/java/com/gadgetgalaxy/dao/UserDAO.java</file>
         </group>
     </open-files>
 </project-private>

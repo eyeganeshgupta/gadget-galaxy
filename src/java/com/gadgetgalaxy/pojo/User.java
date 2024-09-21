@@ -5,7 +5,7 @@ package com.gadgetgalaxy.pojo;
  * @author Ganesh
  */
 
-public class Users {
+public class User {
     private String userEmail;
     private String userName;
     private String mobileNumber;
@@ -13,18 +13,18 @@ public class Users {
     private int postalCode;
     private String password;
 
-    public Users() {
-        System.out.println("Users Pojo");
-        
+    public User() {
+        System.out.println("User Pojo");
     }
 
-    public Users(String userEmail, String userName, String mobileNumber, String address, int postalCode, String password) {
+    public User(String userEmail, String userName, String mobileNumber, String address, int postalCode, String password) {
         this.userEmail = userEmail;
         this.userName = userName;
         this.mobileNumber = mobileNumber;
         this.address = address;
         this.postalCode = postalCode;
         this.password = password;
+        System.out.println("User Pojo");
     }
 
     // Getters and setters
@@ -74,5 +74,22 @@ public class Users {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+    
+    @Override
+    public String toString() {
+        return "╔═══════════════════════════════════════════╗\n" +
+               "║             User Information              ║\n" +
+               "╠═══════════════════════════════════════════╣\n" +
+               "║ Name:     " + padRight(userName, 30) + "║\n" +
+               "║ Email:    " + padRight(userEmail, 30) + "║\n" +
+               "║ Mobile:   " + padRight(mobileNumber, 30) + "║\n" +
+               "║ Address:  " + padRight(address, 30) + "║\n" +
+               "║ Postal:   " + padRight(String.valueOf(postalCode), 30) + "║\n" +
+               "╚═══════════════════════════════════════════╝";
+    }
+
+    private String padRight(String s, int n) {
+        return String.format("%-" + n + "s", s);
     }
 }
