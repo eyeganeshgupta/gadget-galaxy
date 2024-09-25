@@ -22,6 +22,10 @@ public class UserDAOImpl implements UserDAO {
      */
     @Override
     public String registerUser(User user) {
+        if(isRegistered(user.getUserEmail())) {
+            return "This email address is already linked to an existing account.";
+        }
+        
         String sql = "INSERT INTO users (user_email, user_name, mobile_number, address, postal_code, password) VALUES (?, ?, ?, ?, ?, ?)";
         PreparedStatement pstmt = null;
         try {
@@ -87,7 +91,7 @@ public class UserDAOImpl implements UserDAO {
             pstmt.setString(2, password);
             rs = pstmt.executeQuery();
             if (rs.next()) {
-                return rs.getString("user_name");
+                return rs.getString("user_name") + "Successfully logged in.";
             }
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Error validating user credentials", e);
@@ -95,7 +99,7 @@ public class UserDAOImpl implements UserDAO {
             DBUtil.closeResultSet(rs);
             DBUtil.closeStatement(pstmt);
         }
-        return null;
+        return "Access denied. Incorrect username or password.";
     }
 
     /**
