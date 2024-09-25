@@ -4,7 +4,6 @@ package com.gadgetgalaxy.dao.impl;
  *
  * @author Ganesh
  */
-
 import com.gadgetgalaxy.dao.UserDAO;
 import com.gadgetgalaxy.pojo.User;
 import com.gadgetgalaxy.utility.DBUtil;
@@ -22,12 +21,13 @@ public class UserDAOImpl implements UserDAO {
      */
     @Override
     public String registerUser(User user) {
-        if(isRegistered(user.getUserEmail())) {
+        if (isRegistered(user.getUserEmail())) {
             return "This email address is already linked to an existing account.";
         }
         
         String sql = "INSERT INTO users (user_email, user_name, mobile_number, address, postal_code, password) VALUES (?, ?, ?, ?, ?, ?)";
         PreparedStatement pstmt = null;
+        String message = "User registration failed.";
         try {
             Connection conn = DBUtil.provideConnection();
             pstmt = conn.prepareStatement(sql);
@@ -39,16 +39,17 @@ public class UserDAOImpl implements UserDAO {
             pstmt.setString(6, user.getPassword());
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows > 0) {
-                return "User registered successfully!";
-            } else {
-                return "User registration failed.";
+                message = "User registered successfully!";
             }
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Error occurred during registration", e);
-            return "Error occurred during registration: " + e.getMessage();
+            message = "Error occurred during registration";
+            // return "Error occurred during registration: " + e.getMessage();
+
         } finally {
             DBUtil.closeStatement(pstmt);
         }
+        return message;
     }
 
     /**
@@ -59,13 +60,14 @@ public class UserDAOImpl implements UserDAO {
         String sql = "SELECT COUNT(*) FROM users WHERE user_email = ?";
         PreparedStatement pstmt = null;
         ResultSet rs = null;
+        boolean flag = false;
         try {
             Connection conn = DBUtil.provideConnection();
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, email);
             rs = pstmt.executeQuery();
             if (rs.next()) {
-                return rs.getInt(1) > 0;
+                flag = true;
             }
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Error checking user registration", e);
@@ -73,7 +75,7 @@ public class UserDAOImpl implements UserDAO {
             DBUtil.closeResultSet(rs);
             DBUtil.closeStatement(pstmt);
         }
-        return false;
+        return flag;
     }
 
     /**
@@ -84,6 +86,7 @@ public class UserDAOImpl implements UserDAO {
         String sql = "SELECT user_name FROM users WHERE user_email = ? AND password = ?";
         PreparedStatement pstmt = null;
         ResultSet rs = null;
+        String message = "Access denied. Incorrect username or password.";
         try {
             Connection conn = DBUtil.provideConnection();
             pstmt = conn.prepareStatement(sql);
@@ -91,15 +94,16 @@ public class UserDAOImpl implements UserDAO {
             pstmt.setString(2, password);
             rs = pstmt.executeQuery();
             if (rs.next()) {
-                return rs.getString("user_name") + "Successfully logged in.";
+                message = "Successfully logged in.";
             }
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Error validating user credentials", e);
+            message = "Error validating user credentials";
         } finally {
             DBUtil.closeResultSet(rs);
             DBUtil.closeStatement(pstmt);
         }
-        return "Access denied. Incorrect username or password.";
+        return message;
     }
 
     /**
@@ -110,20 +114,20 @@ public class UserDAOImpl implements UserDAO {
         String sql = "SELECT * FROM users WHERE user_email = ?";
         PreparedStatement pstmt = null;
         ResultSet rs = null;
+        User user = null;
         try {
             Connection conn = DBUtil.provideConnection();
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, email);
             rs = pstmt.executeQuery();
             if (rs.next()) {
-                User user = new User();
+                user = new User();
                 user.setUserEmail(rs.getString("user_email"));
                 user.setUserName(rs.getString("user_name"));
                 user.setMobileNumber(rs.getString("mobile_number"));
                 user.setAddress(rs.getString("address"));
                 user.setPostalCode(rs.getInt("postal_code"));
                 // Note: We typically don't return the password for security reasons
-                return user;
             }
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Error retrieving user details", e);
@@ -131,7 +135,7 @@ public class UserDAOImpl implements UserDAO {
             DBUtil.closeResultSet(rs);
             DBUtil.closeStatement(pstmt);
         }
-        return null;
+        return user;
     }
 
     /**
@@ -142,6 +146,7 @@ public class UserDAOImpl implements UserDAO {
         String sql = "SELECT user_name FROM users WHERE user_email = ?";
         PreparedStatement pstmt = null;
         ResultSet rs = null;
+        String firstName = null;
         try {
             Connection conn = DBUtil.provideConnection();
             pstmt = conn.prepareStatement(sql);
@@ -149,7 +154,7 @@ public class UserDAOImpl implements UserDAO {
             rs = pstmt.executeQuery();
             if (rs.next()) {
                 String fullName = rs.getString("user_name");
-                return fullName.split(" ")[0]; // Assuming the first name is the first part of the full name
+                firstName = fullName.split(" ")[0];
             }
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Error retrieving user's first name", e);
@@ -157,7 +162,7 @@ public class UserDAOImpl implements UserDAO {
             DBUtil.closeResultSet(rs);
             DBUtil.closeStatement(pstmt);
         }
-        return null;
+        return firstName;
     }
 
     /**
@@ -168,13 +173,14 @@ public class UserDAOImpl implements UserDAO {
         String sql = "SELECT address FROM users WHERE user_email = ?";
         PreparedStatement pstmt = null;
         ResultSet rs = null;
+        String address = null;
         try {
             Connection conn = DBUtil.provideConnection();
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, email);
             rs = pstmt.executeQuery();
             if (rs.next()) {
-                return rs.getString("address");
+                address = rs.getString("address");
             }
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Error retrieving user's address", e);
@@ -182,6 +188,6 @@ public class UserDAOImpl implements UserDAO {
             DBUtil.closeResultSet(rs);
             DBUtil.closeStatement(pstmt);
         }
-        return null;
+        return address;
     }
 }
