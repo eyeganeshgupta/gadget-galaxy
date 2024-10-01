@@ -174,4 +174,94 @@ public class ProductDAOImpl implements ProductDAO {
         }
         return products;
     }
+
+    @Override
+    public List<Product> searchAllProducts(String search) {
+        List<Product> products = new ArrayList<>();
+        String sql = "SELECT * FROM products WHERE lower(product_name) LIKE ? OR lower(product_type) LIKE ? OR product_info LIKE ?";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtil.provideConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, "%" + search + "%");
+            pstmt.setString(2, "%" + search + "%");
+            pstmt.setString(3, "%" + search + "%");
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Product product = new Product();
+                product.setProductId(rs.getString("product_id"));
+                product.setProductName(rs.getString("product_name"));
+                product.setProductType(rs.getString("product_type"));
+                product.setProductInfo(rs.getString("product_info"));
+                product.setProductPrice(rs.getDouble("product_price"));
+                product.setProductQuantity(rs.getInt("product_quantity"));
+                product.setImage(rs.getAsciiStream("image"));
+                products.add(product);
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error searching products", e);
+        } finally {
+            DBUtil.closeResultSet(rs);
+            DBUtil.closeStatement(pstmt);
+        }
+        return products;
+    }
+
+    @Override
+    public Product getProductDetails(String productId) {
+        String sql = "SELECT * FROM products WHERE product_id = ?";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        Product product = null;
+        try {
+            conn = DBUtil.provideConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, productId);
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                product = new Product();
+                product.setProductId(rs.getString("product_id"));
+                product.setProductName(rs.getString("product_name"));
+                product.setProductType(rs.getString("product_type"));
+                product.setProductInfo(rs.getString("product_info"));
+                product.setProductPrice(rs.getDouble("product_price"));
+                product.setProductQuantity(rs.getInt("product_quantity"));
+                product.setImage(rs.getAsciiStream("image"));
+                return product;
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error retrieving product details", e);
+        } finally {
+            DBUtil.closeResultSet(rs);
+            DBUtil.closeStatement(pstmt);
+        }
+        return product;
+    }
+
+    @Override
+    public int getProductQuantity(String productId) {
+        String sql = "SELECT product_quantity FROM products WHERE product_id = ?";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        int quantity = 0;
+        try {
+            conn = DBUtil.provideConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, productId);
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                quantity = rs.getInt("product_quantity");
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error retrieving product quantity", e);
+        } finally {
+            DBUtil.closeResultSet(rs);
+            DBUtil.closeStatement(pstmt);
+        }
+        return quantity;
+    }
 }
