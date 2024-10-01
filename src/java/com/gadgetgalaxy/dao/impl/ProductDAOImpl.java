@@ -56,4 +56,122 @@ public class ProductDAOImpl implements ProductDAO {
         }
         return message;
     }
+
+    @Override
+    public String updateProduct(Product previousProduct, Product updatedProduct) {
+        if (!previousProduct.getProductId().equals(updatedProduct.getProductId())) {
+            return "Product Identification Mismatch: Update Process Unsuccessful";
+        }
+        
+        String sql = "UPDATE products SET product_name = ?, product_type = ?, product_info = ?, product_price = ?, product_quantity = ?, image = ? WHERE product_id = ?";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        String message = "Failed to update product.";
+        try {
+            conn = DBUtil.provideConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, updatedProduct.getProductName());
+            pstmt.setString(2, updatedProduct.getProductType());
+            pstmt.setString(3, updatedProduct.getProductInfo());
+            pstmt.setDouble(4, updatedProduct.getProductPrice());
+            pstmt.setInt(5, updatedProduct.getProductQuantity());
+            pstmt.setBlob(6, updatedProduct.getImage());
+            pstmt.setString(7, previousProduct.getProductId());
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows > 0) {
+                message = "Product updated successfully!";
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error updating product", e);
+        } finally {
+            DBUtil.closeStatement(pstmt);
+        }
+        return message;
+    }
+
+    @Override
+    public String updateProductPrice(String productId, double updatedPrice) {
+        String sql = "UPDATE products SET product_price = ? WHERE product_id = ?";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        String message = "Failed to update product price.";
+        try {
+            conn = DBUtil.provideConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setDouble(1, updatedPrice);
+            pstmt.setString(2, productId);
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows > 0) {
+                message = "Product price updated successfully!";
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error updating product price", e);
+        } finally {
+            DBUtil.closeStatement(pstmt);
+        }
+        return message;
+    }
+
+    @Override
+    public List<Product> getAllProducts() {
+        List<Product> products = new ArrayList<>();
+        String sql = "SELECT * FROM products";
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtil.provideConnection();
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                Product product = new Product();
+                product.setProductId(rs.getString("product_id"));
+                product.setProductName(rs.getString("product_name"));
+                product.setProductType(rs.getString("product_type"));
+                product.setProductInfo(rs.getString("product_info"));
+                product.setProductPrice(rs.getDouble("product_price"));
+                product.setProductQuantity(rs.getInt("product_quantity"));
+                product.setImage(rs.getAsciiStream("image"));
+                products.add(product);
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error retrieving all products", e);
+        } finally {
+            DBUtil.closeResultSet(rs);
+            DBUtil.closeStatement(stmt);
+        }
+        return products;
+    }
+
+    @Override
+    public List<Product> getAllProductsByType(String type) {
+        List<Product> products = new ArrayList<>();
+        String sql = "SELECT * FROM products WHERE product_type like ?";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtil.provideConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, "%" + type + "%");
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Product product = new Product();
+                product.setProductId(rs.getString("product_id"));
+                product.setProductName(rs.getString("product_name"));
+                product.setProductType(rs.getString("product_type"));
+                product.setProductInfo(rs.getString("product_info"));
+                product.setProductPrice(rs.getDouble("product_price"));
+                product.setProductQuantity(rs.getInt("product_quantity"));
+                product.setImage(rs.getAsciiStream("image"));
+                products.add(product);
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error retrieving products by type", e);
+        } finally {
+            DBUtil.closeResultSet(rs);
+            DBUtil.closeStatement(pstmt);
+        }
+        return products;
+    }
 }
